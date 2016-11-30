@@ -1,0 +1,94 @@
+<% if user_signed_in? %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" >Welcome <strong><%= current_user.email %></strong></a></li>
+                    <li><%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %></li>
+                    <li><%= link_to 'Show profile', user_path(current_user), :class => 'navbar-link' %></li>
+                    <li><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% else %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %></li>
+                    <li><%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% end %>
+
+<div class="container vertial-center">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3 class="text-center">Sign up</h3>
+
+                    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+                        <%= devise_error_messages! %>
+
+                        <div class="field form-group">
+                            <div>
+                                <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "Email" %>
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <div>
+                                <%= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "Password (minimum 6 characters)" %>
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <div>
+                                <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: "Confirm Password" %>
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <div>
+                                <%= f.text_field :location, autocomplete: true, class: "form-control", placeholder: "Location" %>
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <div>
+                                <%= f.text_field :process, autocomplete: true, class: "form-control", placeholder: "Process" %>
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <div>
+                                <%= f.text_field :company, autocomplete: true, class: "form-control", placeholder: "Company" %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-footer">
+                        <div class="actions">
+                            <%= f.submit "Sign up", class: "btn btn-success" %>
+                            <%= link_to "Log in", new_user_session_path, class: "btn btn-primary" %>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>

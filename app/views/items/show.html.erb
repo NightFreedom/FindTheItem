@@ -1,0 +1,109 @@
+<% if user_signed_in? %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" >Welcome <strong><%= current_user.email %></strong></a></li>
+                    <li><%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %></li>
+                    <li><%= link_to 'Show profile', user_path(current_user), :class => 'navbar-link' %></li>
+                    <li><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% else %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %></li>
+                    <li><%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% end %>
+
+<div class="container vertical-center">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <b>ITEM CHAIN</b>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+                <th>Location</th>
+                <th>Process</th>
+                <th>Company</th>
+                <th>Timestamp</th>
+                <tr>
+                    <% if current_user.admin? %>
+                        <% @item.transactions.each do |transaction| %>
+                            <td><%= link_to transaction.place_name, transaction_path(transaction) %></td>
+                            <td><%= transaction.process %></td>
+                            <td><%= transaction.company %></td>
+                            <td><%= transaction.created_at %></td>
+                        </tr>
+                        <tr>
+                        <% end %>
+                    <% else %>
+                        <td><%= link_to @item.transactions.first.place_name, transaction_path(@item.transactions.first) %></td>
+                        <td><%= @item.transactions.first.process %></td>
+                        <td><%= @item.transactions.first.company %></td>
+                        <td><%= @item.transactions.first.created_at %></td>
+                    <% end %>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end col-12 -->
+    <div class="col-md-5">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <b>ITEM</b>
+        </div>
+        <div class="panel-body">
+            <div class="form-horinzontal">
+              <div class="form-group">
+                <label for="item" class="col-sm-3 control-label">ITEM</label>
+                <p class="col-sm-7"><%= @item.name %></p>
+              </div>
+
+              <div class="form-group">
+                <label for="item" class="col-sm-3 control-label">TIMESTAMP</label>
+                <p class="col-sm-7"><%= @item.created_at %></p>
+              </div>
+
+              <div class="form-group">
+                <label for="item" class="col-sm-3 control-label">DESCRIPTION</label>
+                <p class="col-sm-7"><%= @item.description %></p>
+              </div>
+
+              <div class="form-group">
+                <label for="item" class="col-sm-3 control-label">OWNER</label>
+                <p class="col-sm-7"><%= @item.owner %></p>
+            </div>
+            <% if current_user.admin? %>
+                <div class="form-group">
+                    <%= link_to "Add Chain", new_transaction_path(item_id: @item.id), class: "btn btn-success" %>
+                </div>
+            <% end %>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- end row -->
+</div> <!-- end container -->

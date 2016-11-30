@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  date_time: 2016-11-21 13:33:09
+  owner: MyString
+  description: MyString
+  transactions: MyString
+
+two:
+  name: MyString
+  date_time: 2016-11-21 13:33:09
+  owner: MyString
+  description: MyString
+  transactions: MyString

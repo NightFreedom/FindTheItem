@@ -1,0 +1,74 @@
+<% if user_signed_in? %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" >Welcome <strong><%= current_user.email %></strong></a></li>
+                    <li><%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %></li>
+                    <li><%= link_to 'Show profile', user_path(current_user), :class => 'navbar-link' %></li>
+                    <li><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% else %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %></li>
+                    <li><%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% end %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <b>USERS INFO</b>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <th>Email</th>
+                        <th>Location</th>
+                        <th>Process</th>
+                        <th>Company</th>
+                        <th>Admin</th>
+                        <tr>
+                            <% if current_user.admin? %>
+                                <% @users.each do |user| %>
+                                    <td><%= user.email %></td>
+                                    <td><%= user.location %></td>
+                                    <td><%= user.process %></td>
+                                    <td><%= user.company %></td>
+                                    <% if user.admin? %>
+                                        <td><button class="btn btn-success" disabled>Admin</button></td>
+                                    <% else %>
+                                        <td><%= button_to 'Admin', user_make_path(user), class: "btn btn-info" %></td>
+                                    <% end %>
+                                </tr>
+                                <tr>
+                                <% end %>
+                            <% end %>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,79 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bootstrap-sprockets"
+@import "bootstrap"
+
+.container 
+  padding: 6px 12px
+
+#user-edit
+  width: 500px
+  border: 1px solid #303030
+  border-radius: 4px
+
+#user-new
+  width: 300px
+  border: 1px solid #303030
+  border-radius: 4px
+
+#transport-show
+  width: 500px
+
+#transport-rent
+  width: 500px
+
+.vertical-center
+  margin-top: 40px
+
+.img-index
+  width: 150px
+  height: auto
+
+.img-show
+  width: 500px
+  height: auto
+
+.navbar
+  background-color: #303030
+
+.navbar-nav li a
+  color: #FFF !important
+
+.navbar-nav li a:hover
+  color: grey !important
+
+.qrcode table
+  border-width: 0
+  border-style: none
+  border-color: #0000ff
+  border-collapse: collapse
+
+.qrcode td
+  border-width: 0
+  border-style: none
+  border-color: #0000ff
+  border-collapse: collapse
+  padding: 0
+  margin: 0
+  width: 10px
+  height: 10px
+
+td.black
+  background-color: #000
+
+td.white
+  background-color: #fff

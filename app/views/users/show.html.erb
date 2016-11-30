@@ -1,0 +1,185 @@
+<% if user_signed_in? %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" >Welcome <strong><%= current_user.email %></strong></a></li>
+                    <% if current_user.admin? %>
+                        <li><%= link_to 'Admin', users_path, :class => 'navbar-link' %></li>
+                    <% end %>
+                    <li><%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %></li>
+                    <li><%= link_to 'Show profile', user_path(current_user), :class => 'navbar-link' %></li>
+                    <li><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% else %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %></li>
+                    <li><%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% end %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <b>USER INFO</b>
+                </div>
+                <div class="panel-body">
+                    <p><b>Email: </b><%= @user.email %></p>
+                    <p><b>Company: </b><%= @user.company %></p>
+                    <p><b>Location: </b><%= @user.location %></p>
+                    <p><b>Process: </b><%= @user.process %></p>
+                </div>
+            </div>
+
+        </div> <!-- end col-6 -->
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <b>CHAIN INFO</b>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Owner</th>
+                                <th>
+                                    Chain
+                                    <button class="btn btn-info">Supplier</button>
+                                    <button class="btn btn-success">Importer</button>
+                                    <button class="btn btn-warning">Exporter</button>
+                                    <button class="btn btn-danger">Retailer</button>
+                                </th>
+                            </tr>
+                            <tr>
+                                <% @items.each do |item| %>
+                                    <% if item.owner == current_user.email %>
+                                        <td><%= item.id %></td>
+                                        <td><%= link_to item.name, item_path(item) %></td>
+                                        <td><%= item.created_at %></td>
+                                        <td><%= item.owner %></td>
+                                        <td>
+                                            <div class="progress">
+
+                                                <% item.transactions.each do |transaction| %>
+                                                    <% time_elapsed=(transaction.duration/item.elapsed)*100 %>
+                                                    <% if transaction.process == 'Supplier' %>
+                                                        <div class="progress-bar progress-bar-info" style="<%= "width: #{time_elapsed}%" %>">
+                                                            <span class"sr-only"><%= convertToReadable(transaction.duration) %></span>
+                                                        </div>
+                                                    <% elsif transaction.process == 'Importer' %>
+                                                        <div class="progress-bar progress-bar-success" style="<%= "width: #{time_elapsed}%" %>">
+                                                            <span class"sr-only"><%= convertToReadable(transaction.duration) %></span>
+                                                        </div>
+                                                    <% elsif transaction.process == 'Exporter' %>
+                                                        <div class="progress-bar progress-bar-warning" style="<%= "width: #{time_elapsed}%" %>">
+                                                            <span class"sr-only"><%= convertToReadable(transaction.duration) %></span>
+                                                        </div>
+                                                    <% elsif transaction.process == 'Retailer' %>
+                                                        <div class="progress-bar progress-bar-danger" style="<%= "width: #{time_elapsed}%" %>">
+                                                            <span class"sr-only"><%= convertToReadable(transaction.duration) %></span>
+                                                        </div>
+                                                    <% end %>
+                                                <% end %>
+                                            </div>
+                                            <%= link_to 'Add Chain', new_transaction_path(item_id: item.id), class: 'btn btn-success' %>
+                                            <!-- <button class="btn btn-info" data-toggle="modal" data-target="#myModal">View Chain</button> -->
+                                            <%= link_to 'QR Code', item_qrcode_path(item), class: 'btn btn-success' %>
+                                            <%= link_to 'Delete', item_path(item), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-success' %>
+                                            <!--  link_to 'Get QR Code!', item_qrcode_path(item)  -->
+
+                                            <!-- generate chain modal -->
+                                            <div class="modal fade" id="myModal" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">ITEM CHAINS</h4>
+                                                        </div>
+
+                                                        <div class="modal-body">
+
+                                                            <h4>LEGENDS</h4>
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item">
+                                                                    <button class="btn btn-success"></button> Seller
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <button class="btn btn-warning"></button> Supplier
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <button class="btn btn-danger"></button> Importer/Exported
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <button class="btn btn-info"></button> Retailer
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                    </div> <!-- end modal-content -->
+                                                </div> <!-- end modal-dialog -->
+                                            </div> <!-- end modal -->
+                                            <!-- end chain modal -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    <% end %>
+                                <% end %>
+                            </tr>
+                        </table>
+                    </div> <!-- end table-responsive -->
+                </div> <!-- end panel-body -->
+
+                <div class="panel-footer">
+                    <% if current_user.admin? %>
+                        <%= link_to 'Add new item', new_item_path, :class => 'btn btn-success' %>
+                    <% end %>
+                </div>
+            </div> <!-- end panel -->
+        </div> <!-- end col-6 -->
+
+    </div> <!-- end row -->
+</div> <!-- end container -->
+
+<!--
+<tr>
+    <% @items.each do |item| %>
+        <% if item.owner == current_user.email %>
+            <td><%= link_to 'add chain', new_transaction_path(item_id: item.id) %></td>
+            <td><%= link_to 'Get QR Code!', item_qrcode_path(item) %></td>
+            <td><%= item.id %></td>
+            <td><%= link_to item.name, item_path(item) %></td>
+            <td><%= item.created_at %></td>
+            <td><%= item.owner %></td>
+            <% item.transactions.each do |transaction| %>
+                <td><%= link_to transaction.process, transaction_path(transaction) %></td>
+            <% end %>
+        </tr>
+        <tr>
+        <% end %>
+    <% end %>
+</tr>
+-->

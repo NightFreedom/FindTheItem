@@ -1,0 +1,63 @@
+<% if user_signed_in? %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" >Welcome <strong><%= current_user.email %></strong></a></li>
+                    <li><%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %></li>
+                    <li><%= link_to 'Show profile', user_path(current_user), :class => 'navbar-link' %></li>
+                    <li><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% else %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><%= link_to 'FindTheItem', items_path %></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %></li>
+                    <li><%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+<% end %>
+
+<%= hidden_field_tag :chain_id, @transaction.id %>
+<%= hidden_field_tag :created_at, @transaction.created_at %>
+<div class="container vertical-center" id="transport-show">
+<h1>Chain</h1>
+    <ul>
+        <li>
+            <b>Location</b>
+            <%= @transaction.place_name %>
+        </li>
+        <li>
+            <b>Process</b>
+            <%= @transaction.process %>
+        </li>
+        <li>
+            <b>Company</b>
+            <%= @transaction.company %>
+        </li>
+        <li>
+            <b>Chain for Item</b>
+            <% @items.each do |item| %>
+                <% if item.id == @transaction.item_id %>
+                    <%= link_to item.name, item_path(item) %>
+                <% end %>
+            <% end %>
+        </li>
+    </ul>
+</div>
